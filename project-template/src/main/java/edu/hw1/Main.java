@@ -1,7 +1,6 @@
 package edu.hw1;
 
 import java.util.Arrays;
-import java.util.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import static java.lang.Math.abs;
@@ -28,10 +27,12 @@ public final class Main {
         if (time.length == 2) {
             try {
                 int secondsInMinute = 60;
-                if (Integer.parseInt(time[0]) >= 0
-                    && Integer.parseInt(time[1]) >= 0
-                    && Integer.parseInt(time[1]) < secondsInMinute) {
-                    return Integer.parseInt(time[0]) * secondsInMinute + Integer.parseInt(time[1]);
+                int minutes = Integer.parseInt(time[0]);
+                int seconds = Integer.parseInt(time[1]);
+                if (minutes >= 0
+                    && seconds >= 0
+                    && seconds < secondsInMinute) {
+                    return minutes * secondsInMinute + seconds;
                 }
             } catch (NumberFormatException e) {
                 return -1;
@@ -40,28 +41,43 @@ public final class Main {
         return -1;
     }
 
+    @SuppressWarnings("MagicNumber")
     public static int digitCount(int number) {
-        return number == 0 ? 1 : (int) Math.floor(Math.log10(abs(number)) + 1);
+        int digits = 0;
+        int changedNumber = number;
+        if (number != 0) {
+            while (changedNumber != 0) {
+                changedNumber /= 10;
+                digits++;
+            }
+            return digits;
+        } else {
+            return 1;
+        }
     }
 
-    public static boolean isNestable(Integer[] nested, Integer[] container) {
-        int nestedMin = Collections.min(Arrays.asList(nested));
-        int nestedMax = Collections.max(Arrays.asList(nested));
-        int containerMin = Collections.min(Arrays.asList(container));
-        int containerMax = Collections.max(Arrays.asList(container));
+    public static boolean isNestable(int[] nested, int[] container) {
+        int nestedMin = Arrays.stream(nested).min().getAsInt();
+        int nestedMax = Arrays.stream(nested).max().getAsInt();
+        int containerMin = Arrays.stream(container).min().getAsInt();
+        int containerMax = Arrays.stream(container).max().getAsInt();
         return nestedMin > containerMin && nestedMax < containerMax;
     }
 
     public static String stringFix(String brokenString) {
-        char[] chars = brokenString.toCharArray();
-        if (chars.length > 1) {
-            for (int i = 0; i < chars.length - 1; i += 2) {
-                char tmp = chars[i];
-                chars[i] = chars[i + 1];
-                chars[i + 1] = tmp;
+        StringBuilder fixedString = new StringBuilder();
+        if (brokenString.length() > 1) {
+            for (int i = 0; i < brokenString.length() - 1; i += 2) {
+                fixedString.append(brokenString.charAt(i + 1));
+                fixedString.append(brokenString.charAt(i));
             }
+            if (brokenString.length() % 2 == 1) {
+                fixedString.append(brokenString.charAt(brokenString.length() - 1));
+            }
+            return new String(fixedString);
+        } else {
+            return brokenString;
         }
-        return String.valueOf(chars);
     }
 
     @SuppressWarnings("MagicNumber")
@@ -108,14 +124,13 @@ public final class Main {
                 num[i] = stringNumber.charAt(i) - '0';
             }
             Arrays.sort(num);
-            String regex = "\\[|\\]|,|\\s";
-            int minNum = Integer.parseInt(Arrays.toString(num).replaceAll(regex, ""));
+            int minNum = num[0] * 1000 + num[1] * 100 + num[2] * 10 + num[3];
             for (int i = 0; i < num.length / 2; i++) {
                 int temp = num[i];
                 num[i] = num[num.length - i - 1];
                 num[num.length - i - 1] = temp;
             }
-            int maxNum = Integer.parseInt(Arrays.toString(num).replaceAll(regex, ""));
+            int maxNum = num[0] * 1000 + num[1] * 100 + num[2] * 10 + num[3];
             if (maxNum - minNum != 0) {
                 return 1 + kaprekar(maxNum - minNum);
             } else {
@@ -137,18 +152,33 @@ public final class Main {
         return Integer.parseInt(shiftedStr, 2);
     }
 
+    private final static int[][] MOVES = {
+        {1, 2},
+        {1, -2},
+        {2, 1},
+        {2, -1}
+    };
+
     public static boolean isKnightTakes(int[][] board) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if (board[i][j] == 1
-                    && ((i + 1 < board.length && j + 2 < board[0].length && board[i + 1][j + 2] == 1)
-                    || (i + 2 < board.length && j + 1 < board[0].length && board[i + 2][j + 1] == 1)
-                    || (i + 1 < board.length && j - 2 >= 0 && board[i + 1][j - 2] == 1)
-                    || (i + 2 < board.length && j - 1 >= 0 && board[i + 2][j - 1] == 1))) {
-                        return false;
+        int rows = board.length;
+        int cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == 1) {
+                    for (int[] direction : MOVES) {
+                        int row = i + direction[0];
+                        int col = j + direction[1];
+                        if (isValidCell(row, col, rows, cols) && board[row][col] == 1) {
+                            return false;
+                        }
+                    }
                 }
             }
         }
         return true;
+    }
+
+    private static boolean isValidCell(int row, int col, int rows, int cols) {
+        return row >= 0 && row < rows && col >= 0 && col < cols;
     }
 }
