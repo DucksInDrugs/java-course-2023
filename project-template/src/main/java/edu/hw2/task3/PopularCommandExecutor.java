@@ -23,7 +23,11 @@ public final class PopularCommandExecutor {
                 break;
             } catch (ConnectionException e) {
                 if (++attempts == maxAttempts) {
-                    exception = e;
+                    if (exception == null) {
+                        exception = e;
+                    } else {
+                        exception.addSuppressed(e);
+                    }
                 }
             }
         }

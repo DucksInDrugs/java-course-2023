@@ -5,7 +5,7 @@ public class Calling {
     }
 
     public static CallingInfo callingInfo() {
-        StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         StackTraceElement caller = stackTraceElements[1];
         String className = caller.getClassName();
         String methodName = caller.getMethodName();
