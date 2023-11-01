@@ -1,10 +1,10 @@
 package edu.hw3.task6;
 
-import java.util.Collections;
 import java.util.PriorityQueue;
+import static edu.hw3.task6.Stock.PRICE_COMPARATOR;
 
 public class StockMarketImplementation implements StockMarket {
-    private final PriorityQueue<Stock> stockPriorityQueue = new PriorityQueue<>(Collections.reverseOrder());
+    private final PriorityQueue<Stock> stockPriorityQueue = new PriorityQueue<>(PRICE_COMPARATOR);
 
     @Override
     public void add(Stock stock) {

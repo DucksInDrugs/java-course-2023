@@ -1,9 +1,10 @@
 package edu.hw3.task5;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import static edu.hw3.task5.Contact.ASC;
+import static edu.hw3.task5.Contact.DESC;
 
 public class Contacts {
     public List<Contact> parseContacts(List<String> contacts, String sortType) {
@@ -22,9 +23,9 @@ public class Contacts {
             }
         }).collect(Collectors.toCollection(ArrayList::new));
         if (sortType.equals("ASC")) {
-            Collections.sort(sortedContacts);
+            sortedContacts.sort(ASC);
         } else if (sortType.equals("DESC")) {
-            sortedContacts.sort(Collections.reverseOrder());
+            sortedContacts.sort(DESC);
         }
         return sortedContacts;
     }

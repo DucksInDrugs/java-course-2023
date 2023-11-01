@@ -1,9 +1,9 @@
 package edu.hw3.task5;
 
+import java.util.Comparator;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
-public class Contact implements Comparable<Contact> {
+public class Contact {
     private final String name;
     private final String surname;
 
@@ -12,18 +12,18 @@ public class Contact implements Comparable<Contact> {
         this.surname = surname;
     }
 
-    @Override
-    public int compareTo(@NotNull Contact o) {
-        if (this.surname == null && o.surname == null) {
-            return this.name.compareTo(o.name);
-        } else if (this.surname == null) {
-            return this.name.compareTo(o.surname);
-        } else if (o.surname == null) {
-            return this.surname.compareTo(o.name);
-        } else {
-            return this.surname.compareTo(o.surname);
-        }
+    public String getName() {
+        return name;
     }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    static final Comparator<Contact> ASC = Comparator
+        .comparing(Contact::getSurname)
+        .thenComparing(Contact::getName);
+    static final Comparator<Contact> DESC = ASC.reversed();
 
     @Override
     public boolean equals(Object o) {

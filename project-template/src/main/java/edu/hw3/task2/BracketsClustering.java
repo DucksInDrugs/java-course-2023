@@ -10,13 +10,13 @@ public class BracketsClustering {
         List<String> result = new ArrayList<>();
         StringBuilder cluster = new StringBuilder();
         char[] bracketsCharacters = brackets.toCharArray();
-        for (int i = 0; i < bracketsCharacters.length; i++) {
-            if (openedBrackets.size() == 0 && bracketsCharacters[i] == ')') {
-                return null;
+        for (char bracketsCharacter : bracketsCharacters) {
+            if (openedBrackets.size() == 0 && bracketsCharacter == ')') {
+                throw new IllegalArgumentException("not correct a balanced bracket sequences");
             }
-            cluster.append(bracketsCharacters[i]);
-            if (bracketsCharacters[i] == '(') {
-                openedBrackets.push(bracketsCharacters[i]);
+            cluster.append(bracketsCharacter);
+            if (bracketsCharacter == '(') {
+                openedBrackets.push(bracketsCharacter);
             } else {
                 if (openedBrackets.size() == 1) {
                     result.add(new String(cluster));

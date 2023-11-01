@@ -1,9 +1,9 @@
 package edu.hw3.task6;
 
+import java.util.Comparator;
 import java.util.Objects;
-import org.jetbrains.annotations.NotNull;
 
-public class Stock implements Comparable<Stock> {
+public class Stock {
     private final String title;
     private final Double price;
 
@@ -12,10 +12,12 @@ public class Stock implements Comparable<Stock> {
         this.price = price;
     }
 
-    @Override
-    public int compareTo(@NotNull Stock o) {
-        return this.price.compareTo(o.price);
+    public Double getPrice() {
+        return price;
     }
+
+    public static final Comparator<Stock> PRICE_COMPARATOR = Comparator
+        .comparingDouble(Stock::getPrice);
 
     @Override
     public boolean equals(Object o) {
